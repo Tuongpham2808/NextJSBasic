@@ -18,12 +18,12 @@ export async function generateMetadata({
   const userData: Promise<User> = getUser(userId);
   const user = await userData;
 
-  if (!user.name) {
+  if (!user?.name) {
     return {
       title: "User not found",
     };
   }
-
+  //tạo ra metadata cho mỗi user đc get
   return {
     title: user.name,
     description: `This is the page of ${user.name}`,
@@ -35,9 +35,9 @@ export default async function UserPage({ params: { userId } }: Params) {
   const userPostsData: Promise<Post[]> = getUserPost(userId);
   //   const [user, userPosts] = await Promise.all([userData, userPostsData]);
   const user = await userData;
-
-  if (!user.name) return notFound();
-
+  //hiển thị notFound 404 khi có lỗi
+  if (!user?.name) return notFound();
+  //truyền data qua props và hiển thị loading với suspence
   return (
     <div>
       <h2>{user.name}</h2>
@@ -48,7 +48,7 @@ export default async function UserPage({ params: { userId } }: Params) {
     </div>
   );
 }
-
+//lấy ra users để phục vụ SSG
 export async function generateStaticParams() {
   const usersData: Promise<User[]> = getAllUsers();
   const users = await usersData;
